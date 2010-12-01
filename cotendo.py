@@ -49,19 +49,19 @@ class Cotendo(object):
         self.client = Client('https://api.cotendo.net/cws?wsdl',
                              username=username, password=password)
 
-    def cdn_get_conf(cname, environment):
+    def cdn_get_conf(self, cname, environment):
         """
         Returns the existing origin configuration and token from the CDN
         """
         return self.client.service.cdn_get_conf(cname, environment)
 
-    def cdn_publish_conf(cname):
+    def cdn_publish_conf(self, cname):
         """
         Publishes a requested origin staging configuration
         """
         return self.client.service.cdn_publish_conf(cname)
 
-    def cdn_set_conf(cname, originConf, environment, token):
+    def cdn_set_conf(self, cname, originConf, environment, token):
         """
         The cdn_set_conf method enables the user to update an existing
         origin configuration in the CDN.
@@ -75,19 +75,19 @@ class Cotendo(object):
         return self.client.service.cdn_set_conf(
             cname, originConf, environment, token)
 
-    def dns_get_conf(domainName, environment):
+    def dns_get_conf(self, domainName, environment):
         """
         Returns the existing domain configuration and token from the ADNS
         """
         return self.client.service.dns_get_conf(domainName, environment)
 
-    def dns_publish_conf(domainName):
+    def dns_publish_conf(self, domainName):
         """
         Publishes a requested origin staging configuration
         """
         return self.client.service.dns_publish_conf(domainName)
 
-    def dns_set_conf(domainName, domainConf, environment, token):
+    def dns_set_conf(self, domainName, domainConf, environment, token):
         """
         The cdn_set_conf method enables the user to update an existing
         origin configuration in the CDN.
@@ -101,7 +101,7 @@ class Cotendo(object):
         return self.client.service.dns_set_conf(
             domainName, domainConf, environment, token)
 
-    def dns_set_variables(variables):
+    def dns_set_variables(self, variables):
         """
         This API sets one or more variable values in the DNS configuration.
         """
