@@ -1,4 +1,9 @@
+import logging
+import suds
 from suds.client import Client
+from suds.plugin import MessagePlugin
+from suds.sax.element import Element
+from suds.sax.text import Text
 
 class Cotendo(object):
     """
@@ -45,9 +50,17 @@ class Cotendo(object):
             <variable name="ny_weight" value="10"/>
 
     """
-    def __init__(self, username, password):
+    def __init__(self, username, password, debug=False):
+        logging.basicConfig(level=logging.INFO)
         self.client = Client('https://api.cotendo.net/cws?wsdl',
-                             username=username, password=password)
+                             location = 'http://api.cotendo.net/cws?ver=1.0',
+                             username=username, password=password,
+                             plugins=[CotendoPlugin()])
+        if debug:
+            logging.getLogger('suds.client').setLevel(logging.DEBUG)
+            logging.getLogger('suds.transport').setLevel(logging.DEBUG)
+            logging.getLogger('suds.xsd.schema').setLevel(logging.DEBUG)
+            logging.getLogger('suds.wsdl').setLevel(logging.DEBUG)
 
     def cdn_get_conf(self, cname, environment):
         """
@@ -117,3 +130,48 @@ class Cotendo(object):
         """
         return self.client.service.doFlush(
             cname, flushExpression, flushType)
+
+class UnescapedText(unicode):
+    def escape(self):
+        return self
+
+class CotendoPlugin(MessagePlugin):
+    def marshalled(self, context):
+        # Adjust prefixes
+        context.envelope.refitPrefixes()
+        context.envelope.expns = None
+
+        context.envelope = context.envelope.setPrefix(
+                'soap', 'http://schemas.xmlsoap.org/soap/envelope/')
+
+        # Update the Envelope name
+        context.envelope.rename('soap:Envelope')
+
+        # Remove Excess header
+        context.envelope.remove(context.envelope.getChildren()[0])
+
+        # Update the Body name
+        context.envelope.getChildren()[0].rename('soap:Body')
+
+        # Add prefixes
+        context.envelope.addPrefix('xsi',
+                'http://www.w3.org/2001/XMLSchema-instance')
+        context.envelope.addPrefix('soapenc',
+                'http://schemas.xmlsoap.org/soap/encoding/')
+        context.envelope.addPrefix('xsd',
+                'http://www.w3.org/2001/XMLSchema')
+
+        # Set Encoding Style
+        context.envelope.set('soap:encodingStyle',
+                'http://schemas.xmlsoap.org/soap/encoding/')
+
+        body = context.envelope.getChild('Body')
+
+        # Remove xmlns from body
+        body.expns = None
+
+        # Add param xsi types and wrap data in <![CDATA[data]]>
+        method = body.getChildren()[0]
+        for param in method.getChildren():
+            param.set('xsi:type', 'xsd:string')
+            param.text = UnescapedText('<![CDATA[' + Text(param.text) + ']]>')
