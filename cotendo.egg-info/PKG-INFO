@@ -1,6 +1,6 @@
 Metadata-Version: 1.0
-Name: python-cotendo
-Version: 0.0dev
+Name: cotendo
+Version: 0.1dev
 Summary: Cotendo API
 Home-page: https://github.com/seryl/Python-Cotendo
 Author: Josh Toft
