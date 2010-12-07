@@ -1,9 +1,12 @@
 import logging
 import suds
+
 from suds.client import Client
 from suds.plugin import MessagePlugin
 from suds.sax.element import Element
 from suds.sax.text import Text
+
+from cotendohelper import CotendoDNS, CotendoCDN, UnescapedText
 
 class Cotendo(object):
     """
@@ -66,7 +69,9 @@ class Cotendo(object):
         """
         Returns the existing origin configuration and token from the CDN
         """
-        return self.client.service.cdn_get_conf(cname, environment)
+        response = self.client.service.cdn_get_conf(cname, environment)
+        cdn_config = CotendoCDN(response)
+        return cdn_config
 
     def cdn_publish_conf(self, cname):
         """
@@ -92,7 +97,9 @@ class Cotendo(object):
         """
         Returns the existing domain configuration and token from the ADNS
         """
-        return self.client.service.dns_get_conf(domainName, environment)
+        response = self.client.service.dns_get_conf(domainName, environment)
+        dns_config = CotendoDNS(response)
+        return dns_config
 
     def dns_publish_conf(self, domainName):
         """
@@ -130,10 +137,6 @@ class Cotendo(object):
         """
         return self.client.service.doFlush(
             cname, flushExpression, flushType)
-
-class UnescapedText(unicode):
-    def escape(self):
-        return self
 
 class CotendoPlugin(MessagePlugin):
     def marshalled(self, context):
@@ -175,3 +178,22 @@ class CotendoPlugin(MessagePlugin):
         for param in method.getChildren():
             param.set('xsi:type', 'xsd:string')
             param.text = UnescapedText('<![CDATA[' + Text(param.text) + ']]>')
+
+class CotendoHelper(Cotendo):
+    def __init__(self):
+        super(CotendoHelper, self).__init__(
+            username, password, debug=False)
+        # DNS Helper
+        self.dns = None
+        # CDN Helper
+        self.cdn = None
+
+    def GrabDNS(self, domain, environment):
+        self.dns_info = self.dns_get_conf(domain, environment)
+
+    def UpdateDNS(self, domain, environment):
+        """Pushes DNS updates to staging"""
+        self.dns_set_conf(domain, self.dns.config,
+                          environment, self.dns.token)
+
+
