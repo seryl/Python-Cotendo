@@ -3,9 +3,6 @@ Python-Cotendo
 
 References the [Cotendo API](http://help.cotendo.net/display/Manual22/APIs?undefined).
 
-Usage
------
-
 ## Overview
 
     from cotendo import CotendoHelper
