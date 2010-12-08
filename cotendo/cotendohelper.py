@@ -59,8 +59,17 @@ class CotendoDNS(CotendoObject):
             rec = record
         else:
             self._entries.append(record)
-        self.sort_entries()
+        self.sort()
         return True
+
+    def diff_record(self, record):
+        """Return the removed and added diffs"""
+        rec = self.get_record(record._record_type, record.host)
+        if rec is not None and record is not None:
+            return {'removed': tuple(set(rec.results) - set(record.results)),
+                    'added': tuple(set(record.results) - set(rec.recults))}
+        else:
+            return False
 
     def get_record(self, dns_record_type, host):
         """Fetch a DNS record"""
@@ -101,9 +110,22 @@ class CotendoDNS(CotendoObject):
 
         self._entries = sorted_entries
 
+    @property
     def config(self):
         """Create the finalized configuration"""
-        pass
+        root = etree.Element("xml")
+        resource_records = etree.SubElement(root, "recouce_records")
+
+        # Append SOA and NS records
+        resource_records.append(SOARecord()._etree)
+        resource_records.append(NSRecord()._etree)
+
+        # Append the rest
+        for record in self._entries:
+            resource_records.append(record._etree)
+
+        return etree.tostring(root, encoding="utf-8",
+                              pretty_print=True)
 
 class CotendoCDN(CotendoObject):
     def entries(self):

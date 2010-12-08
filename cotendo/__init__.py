@@ -7,6 +7,7 @@ from suds.sax.element import Element
 from suds.sax.text import Text
 
 from cotendohelper import CotendoDNS, CotendoCDN, UnescapedText
+from lxml import etree
 
 class Cotendo(object):
     """
@@ -180,7 +181,7 @@ class CotendoPlugin(MessagePlugin):
             param.text = UnescapedText('<![CDATA[' + Text(param.text) + ']]>')
 
 class CotendoHelper(Cotendo):
-    def __init__(self, username, password, debug=False):
+    def __init__(self):
         super(CotendoHelper, self).__init__(
             username, password, debug=False)
         # DNS Helper
@@ -189,11 +190,14 @@ class CotendoHelper(Cotendo):
         self.cdn = None
 
     def GrabDNS(self, domain, environment):
-        self.dns_info = self.dns_get_conf(domain, environment)
+        self.dns = self.dns_get_conf(domain, environment)
 
     def UpdateDNS(self, domain, environment):
-        """Pushes DNS updates to staging"""
+        """Pushes DNS updates"""
         self.dns_set_conf(domain, self.dns.config,
                           environment, self.dns.token)
 
+    def Flush(self):
+        """Flushes DNS updates"""
+        self.dns
 

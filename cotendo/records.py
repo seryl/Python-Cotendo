@@ -83,7 +83,7 @@ class TXTResult(DNSResult):
 class DNSRecord(object):
     """Abstract DNS Record"""
     def __init__(self, record=None):
-        self.records = []
+        self.results = []
         self._etree = None
         self._record_type = 'dns'
 
@@ -97,8 +97,9 @@ class DNSRecord(object):
         if record is not None:
             self.host = record.get("host")
             for r in record.getchildren():
-                self.records.append(
-                    self._append_results(result_type, r, params))
+                result = self._append_results(result_type, r, params)
+                self._etree.append(result._etree)
+                self.results.append(result)
         else:
             self.host = ""
 
