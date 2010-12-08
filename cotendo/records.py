@@ -9,7 +9,7 @@ class DNSResult(object):
         self._result_type = 'dns'
 
     def _get_ttl(self):
-        return self._etree_.get("ttl")
+        return self._etree.get("ttl")
 
     def _set_ttl(self, ttl):
         return self._etree.set("ttl", str(ttl))
