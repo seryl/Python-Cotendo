@@ -27,6 +27,7 @@ class CotendoDNS(CotendoObject):
     def __init__(self, response):
         super(CotendoDNS, self).__init__(response)
         self._entries = self._get_entries()
+        self.sort()
 
     def _get_entries(self):
         records = self._data.getchildren()[0]

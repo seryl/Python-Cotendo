@@ -181,7 +181,7 @@ class CotendoPlugin(MessagePlugin):
             param.text = UnescapedText('<![CDATA[' + Text(param.text) + ']]>')
 
 class CotendoHelper(Cotendo):
-    def __init__(self):
+    def __init__(self, username, password, debug=False):
         super(CotendoHelper, self).__init__(
             username, password, debug=False)
         # DNS Helper
