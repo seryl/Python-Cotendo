@@ -7,7 +7,6 @@ from suds.sax.element import Element
 from suds.sax.text import Text
 
 from cotendohelper import CotendoDNS, CotendoCDN, UnescapedText
-from lxml import etree
 
 class Cotendo(object):
     """

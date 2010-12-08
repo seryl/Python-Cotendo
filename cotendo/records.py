@@ -6,6 +6,7 @@ class DNSResult(object):
     def __init__(self, ttl=1800):
         self._etree = etree.Element("result")
         self.ttl = ttl
+        self._result_type = 'dns'
 
     def _get_ttl(self):
         return self._etree_.get("ttl")
@@ -20,6 +21,7 @@ class DomainResult(DNSResult):
     def __init__(self, domain='', ttl=1800):
         super(DomainResult, self).__init__(ttl)
         self.domain = str(domain)
+        self._result_type = 'domain'
 
     def _get_domain(self):
         return self._etree.get("domain_name")
@@ -34,6 +36,7 @@ class AResult(DNSResult):
     def __init__(self, ip='', ttl=10800):
         super(AResult, self).__init__(ttl)
         self.ip = ip
+        self._result_type = 'a'
 
     def _get_ip(self):
         return self._etree.get("ip")
@@ -47,12 +50,14 @@ class CNAMEResult(DomainResult):
     """CNAME record entry"""
     def __init__(self, domain='', ttl=1800):
         super(CNAMEResult, self).__init__(domain, ttl)
+        self._result_type = 'cname'
 
 class MXResult(DomainResult):
     """MX record entry"""
     def __init__(self, domain='', preference=20, ttl=1800):
         super(MXResult, self).__init__(domain, ttl)
         self.preference = preference
+        self._result_type = 'mx'
 
     def _get_preference(self):
         return self._etree.get("preference")
@@ -66,10 +71,12 @@ class PTRResult(DomainResult):
     """PTR record entry"""
     def __init__(self, domain='', ttl=1800):
         super(PTRResult, self).__init__(domain, ttl)
+        self._result_type = 'ptr'
 
 class TXTResult(DNSResult):
     def __init__(self, text="", ttl=1800):
         super(TXTResult, self).__init__(ttl)
+        self._result_type = 'txt'
 
     def _get_text(self):
         return self._etree.get("text")
