@@ -14,7 +14,11 @@ class DNSResult(object):
     def _set_ttl(self, ttl):
         return self._etree.set("ttl", str(ttl))
 
-    ttl = property(_get_ttl, _set_ttl)
+     @property
+    def to_dict(self):
+        return {'ttl': ttl}
+
+   ttl = property(_get_ttl, _set_ttl)
 
 class DomainResult(DNSResult):
     """Abstract skeleton for CNAME and MX records"""
@@ -29,7 +33,11 @@ class DomainResult(DNSResult):
     def _set_domain(self, domain):
         return self._etree.set("domain_name", domain)
 
-    domain = property(_get_domain, _set_domain)
+    @property
+    def to_dict(self):
+        return {'domain': domain, 'ttl': ttl}
+
+  domain = property(_get_domain, _set_domain)
 
 class AResult(DNSResult):
     """A record entry"""
@@ -43,6 +51,10 @@ class AResult(DNSResult):
 
     def _set_ip(self, ip):
         return self._etree.set("ip", str(ip))
+
+    @property
+    def to_dict(self):
+        return {'ip': ip, 'ttl': ttl}
 
     ip = property(_get_ip, _set_ip)
 
@@ -65,6 +77,11 @@ class MXResult(DomainResult):
     def _set_preference(self, preference):
         return self._etree.set("preference", str(preference))
 
+    @property
+    def to_dict(self):
+        return {'domain': domain,
+                'preference': preference, 'ttl': ttl}
+
     preference = property(_get_preference, _set_preference)
 
 class PTRResult(DomainResult):
@@ -76,6 +93,7 @@ class PTRResult(DomainResult):
 class TXTResult(DNSResult):
     def __init__(self, text="", ttl=1800):
         super(TXTResult, self).__init__(ttl)
+        self.text = text
         self._result_type = 'txt'
 
     def _get_text(self):
@@ -83,6 +101,10 @@ class TXTResult(DNSResult):
 
     def _set_text(self, text):
         return self._etree.set("text", text)
+
+    @property
+    def to_dict(self):
+        return {'text' text, 'ttl': ttl}
 
     text = property(_get_text, _set_text)
 

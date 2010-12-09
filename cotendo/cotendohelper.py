@@ -111,6 +111,10 @@ class CotendoDNS(CotendoObject):
 
         self._entries = sorted_entries
 
+    def import_dict(self, dns_dict):
+        """Import a dictionary to create a dns config"""
+        pass
+
     @property
     def config(self):
         """Create the finalized configuration"""
@@ -127,6 +131,22 @@ class CotendoDNS(CotendoObject):
 
         return etree.tostring(root, encoding="utf-8",
                               pretty_print=True)
+
+    @property
+    def dict_config(self):
+        """Create a dict version of the configuration"""
+        dns_config = {}
+        dns_config['soa'] = SOARecord().to_dict
+        dns_config['ns'] = NSRecord().to_dict
+
+        dns_config['a'] = []
+        dns_config['cname'] = []
+        dns_config['mx'] = []
+        dns_config['ptr'] = []
+        dns_config['txt'] = []
+        for record in self._entries:
+            dns_config[record._result_type] = record.to_dict
+        return dns_config
 
 class CotendoCDN(CotendoObject):
     def entries(self):

@@ -196,7 +196,9 @@ class CotendoHelper(Cotendo):
         self.dns_set_conf(domain, self.dns.config,
                           environment, self.dns.token)
 
-    def Flush(self):
-        """Flushes DNS updates"""
-        self.dns
+    #def ImportDNS(self, dns_json):
+    #    self.dns
+
+    def ExportDNS(self):
+        return self.dns.dict_config
 
