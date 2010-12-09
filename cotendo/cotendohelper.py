@@ -136,8 +136,11 @@ class CotendoDNS(CotendoObject):
     def dict_config(self):
         """Create a dict version of the configuration"""
         dns_config = {}
-        dns_config['soa'] = SOARecord().to_dict
-        dns_config['ns'] = NSRecord().to_dict
+
+        soa = SOARecord()
+        dns_config['soa'] = [{'domain_name': soa.domain_name}]
+        ns = NSRecord()
+        dns_config['ns'] = [{'domain_name': ns.domain_name, 'host': ns.host}]
 
         dns_config['a'] = []
         dns_config['cname'] = []
@@ -145,7 +148,7 @@ class CotendoDNS(CotendoObject):
         dns_config['ptr'] = []
         dns_config['txt'] = []
         for record in self._entries:
-            dns_config[record._result_type] = record.to_dict
+            dns_config[record._record_type].append(record._dict)
         return dns_config
 
 class CotendoCDN(CotendoObject):
