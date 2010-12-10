@@ -196,9 +196,12 @@ class CotendoHelper(Cotendo):
         self.dns_set_conf(domain, self.dns.config,
                           environment, self.dns.token)
 
-    #def ImportDNS(self, dns_json):
-    #    self.dns
+    def ImportDNS(self, config):
+        """Import a dns configuration file into the helper"""
+        self.dns = CotendoDNS(config)
+        return True
 
     def ExportDNS(self):
-        return self.dns.dict_config
+        """Export a dns configuration file from the helper"""
+        return self.dns.config
 

@@ -4,7 +4,6 @@ from lxml import etree
 class DNSResult(object):
     """Abstract skeleton for every DNS result"""
     def __init__(self, ttl=1800):
-        self._dict = {}
         self._etree = etree.Element("result")
         self.ttl = ttl
         self._result_type = 'dns'
@@ -13,7 +12,6 @@ class DNSResult(object):
         return self._etree.get("ttl")
 
     def _set_ttl(self, ttl):
-        self._dict["ttl"] = str(ttl)
         return self._etree.set("ttl", str(ttl))
 
     ttl = property(_get_ttl, _set_ttl)
@@ -29,7 +27,6 @@ class DomainResult(DNSResult):
         return self._etree.get("domain_name")
 
     def _set_domain(self, domain):
-        self._dict["domain"] = domain
         return self._etree.set("domain_name", domain)
 
     domain = property(_get_domain, _set_domain)
@@ -45,7 +42,6 @@ class AResult(DNSResult):
         return self._etree.get("ip")
 
     def _set_ip(self, ip):
-        self._dict["ip"] = ip
         return self._etree.set("ip", str(ip))
 
     ip = property(_get_ip, _set_ip)
@@ -67,7 +63,6 @@ class MXResult(DomainResult):
         return self._etree.get("preference")
 
     def _set_preference(self, preference):
-        self._dict["preference"] = preference
         return self._etree.set("preference", str(preference))
 
     preference = property(_get_preference, _set_preference)
@@ -88,7 +83,6 @@ class TXTResult(DNSResult):
         return self._etree.get("text")
 
     def _set_text(self, text):
-        self._dict["text"] = text
         return self._etree.set("text", text)
 
     text = property(_get_text, _set_text)
@@ -98,7 +92,6 @@ class DNSRecord(object):
     """Abstract DNS Record"""
     def __init__(self, record=None):
         self.results = []
-        self._dict = {}
         self._etree = None
         self._record_type = 'dns'
 
@@ -126,7 +119,6 @@ class DNSRecord(object):
             else:
                 kwargs[key] = result.get(key)
 
-        self._dict = kwargs
         return func_ptr(**kwargs)
 
     host = property(_get_host, _set_host)
