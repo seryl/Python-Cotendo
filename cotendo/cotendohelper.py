@@ -19,8 +19,11 @@ self_closing_tags = [
 class CotendoObject(object):
     def __init__(self, response):
         self.token = response[0]
+        self._add_config(response[1])
+
+    def _add_config(self, config):
         soup = BeautifulSoup(
-            response[1], selfClosingTags=self_closing_tags)
+            config, selfClosingTags=self_closing_tags)
         self._data = etree.XML(soup.prettify())
 
 class CotendoDNS(CotendoObject):

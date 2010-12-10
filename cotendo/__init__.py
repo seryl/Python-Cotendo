@@ -197,8 +197,15 @@ class CotendoHelper(Cotendo):
                           environment, self.dns.token)
 
     def ImportDNS(self, config):
-        """Import a dns configuration file into the helper"""
-        self.dns = CotendoDNS(config)
+        """
+        Import a dns configuration file into the helper
+
+        Note: This requires that you have the latest token.
+        To get the latest token, run the GrabDNS command first.
+        """
+        if not self.dns.token:
+            raise Exception("You must have the latest dns token set first.")
+        self.dns._add_config(config)
         return True
 
     def ExportDNS(self):
