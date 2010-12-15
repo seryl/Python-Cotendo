@@ -3,7 +3,6 @@ import suds
 
 from suds.client import Client
 from suds.plugin import MessagePlugin
-from suds.sax.element import Element
 from suds.sax.text import Text
 
 from cotendohelper import CotendoDNS, CotendoCDN, UnescapedText

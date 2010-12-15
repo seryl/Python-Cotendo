@@ -61,6 +61,10 @@ class CotendoDNS(CotendoObject):
         rec = self.get_record(record._record_type, record.host)
         if rec:
             rec = record
+            for i,r in enumerate(self._entries):
+                if r._record_type == record._record_type \
+                        and r.host == record.host:
+                            self._entries[i] = record
         else:
             self._entries.append(record)
         self.sort()
@@ -113,6 +117,23 @@ class CotendoDNS(CotendoObject):
                 sorted_entries.append(record)
 
         self._entries = sorted_entries
+
+    @staticmethod
+    def CreateRecord(record_type, host, results):
+        """
+        Create a record of type (record_type) and fill it with the given
+        dict of results
+        """
+        record_class = dns_tag_lookup[record_type]
+        record = etree.Element("a")
+        record.set("host", host)
+        for params in results:
+            result = etree.Element("result")
+            for k,v in params.iteritems():
+                result.set(k, v)
+            record.append(result)
+
+        return record_class(record)
 
     @property
     def config(self):
