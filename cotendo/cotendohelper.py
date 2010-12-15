@@ -139,7 +139,7 @@ class CotendoDNS(CotendoObject):
     def config(self):
         """Create the finalized configuration"""
         root = etree.Element("xml")
-        resource_records = etree.SubElement(root, "recouce_records")
+        resource_records = etree.SubElement(root, "resource_records")
 
         # Append SOA and NS records
         resource_records.append(SOARecord()._etree)
