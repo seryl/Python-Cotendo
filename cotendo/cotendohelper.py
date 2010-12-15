@@ -91,7 +91,7 @@ class CotendoDNS(CotendoObject):
     def del_record(self, dns_record_type, host):
         """Remove a DNS record"""
         rec = self.get_record(dns_record_type, host)
-        if ref:
+        if rec:
             self._entries = list(set(self._entries) - set([rec]))
         return True
 
