@@ -1,6 +1,8 @@
 Python-Cotendo
 ==============
 
+A big thanks to RockYou! for allowing me to publish this work.
+
 References the [Cotendo API](http://help.cotendo.net/display/Manual22/APIs?undefined).
 
 ## Overview
