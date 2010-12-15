@@ -14,55 +14,35 @@ References the [Cotendo API](http://help.cotendo.net/display/Manual22/APIs?undef
 
     # Grab the production mysite.com config
     c.dns.GrabDNS('mysite.com', 1)
-    ...
 
-### Pretty print the config
-
-    ...
-    # Note this sorts the config, it's a relatively slow operation
+    # print a sorted pretty printed config
     print c.ExportDNS()
 
-## Updating and modifying the config
+## Updates and modifications
 
 You could always create your own xml parts and import them yourself, but there's a helper function provided to make that a little easier.
 
-### Creating a record
-
-    ...
+    # Creating a record
     results = [{'ip': '10.1.2.3', 'ttl': 1800},
         {'ip': '10.1.2.4', 'ttl': 1800}]
     record = c.dns.CreateRecord('a', 'myserver', results)
 
-### Add a record to the configuration
-
-    ...
-    # Note that this adds or updates a current record
+    # Add/Update a record to the configuration
     c.dns.add_record(record)
 
-### Delete a record from the configuration
-
-    ...
+    # Delete a record from the configuration
     c.dns.del_record('a', 'myserver')
 
-### Import a config into the Cotendo Helper
-
-    ...
+    # Import a config into the cotendo helper
     c.dns.ImportDNS(config, token)
 
-### Update the DNS config on Cotendo's side
-
-    ...
-    # This takes the config from the CotendoHelper.dns.config
+    # Update/Upload the dns config to cotendo, reads c.dns.config
     c.dns.UpdateDNS('mysite.com', 1)
-
-### Publish the configuration
-
-    ...
+    
+    # Publish the configuration
     c.dns_publish_conf('mysite.com')
-
-### printing a cli readable version of the config
-
-    ...
+    
+    # print a un-xml'd version of the config
     c.dns.show()
 
 ## Lighter API
