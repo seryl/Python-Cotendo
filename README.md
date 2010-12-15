@@ -1,7 +1,7 @@
 Python-Cotendo
 ==============
 
-Kudos to [RockYou](http://www.rockyou.com), they've been very open to the idea of sharing.
+Kudos to [RockYou](http://www.rockyou.com) for allowing me to open source this.
 
 References the [Cotendo API](http://help.cotendo.net/display/Manual22/APIs?undefined).
 
