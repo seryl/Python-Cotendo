@@ -87,6 +87,45 @@ class TXTResult(DNSResult):
 
     text = property(_get_text, _set_text)
 
+class SRVResult(DNSResult):
+    def __init__(self, domain='', priority=0, weight=0, port=80, target=''):
+        super(SRVResult, self).__init__(ttl)
+        self.domain = domain
+        self.priority = priority
+        self.weight = weight
+        self.port = port
+        self.target = target
+        self._result_type = 'srv'
+
+    def _get_priority(self):
+        return self._etree.get("priority")
+
+    def _set_priority(self, priority):
+        return self._etree.set("priority", str(priority))
+
+    def _get_weight(self):
+        return self._etree.get("weight")
+
+    def _set_weight(self, weight):
+        return self._etree.set("weight", str(weight))
+
+    def _get_port(self):
+        return self._etree.get("port")
+
+    def _set_port(self, priority):
+        return self._etree.set("port", str(port))
+
+    def _get_target(self):
+        return self._etree.get("target")
+
+    def _set_target(self, priority):
+        return self._etree.set("target", str(target))
+
+    priority = property(_get_priority, _set_priority)
+    weight = property(_get_weight, _set_weight)
+    port = property(_get_port, _set_port)
+    target = property(_get_target, _set_target)
+
 # DNS Records
 class DNSRecord(object):
     """Abstract DNS Record"""
@@ -185,6 +224,15 @@ class PTRRecord(DNSRecord):
         self._init_records(
             record, PTRResult, ("domain", "ttl"))
         self._record_type = 'ptr'
+
+class SRVRecord(DNSRecord):
+    """SRV record lising"""
+    def __init__(self, record=None):
+        super(SRVRecord, self).__init__()
+        self._etree = etree.Element("srv")
+        self._init_records(
+            record, SRVResult, ("domain", "priority", "weight", "port", "target"))
+        self._record_type = 'srv'
 
 # CDN Records
 class CDNRecord(object):

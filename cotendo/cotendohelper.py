@@ -9,6 +9,7 @@ dns_tag_lookup = {
     'cname': CNAMERecord,
     'mx': MXRecord,
     'ptr': PTRRecord,
+    'srv': SRVRecord,
     'txt': TXTRecord
     }
 
@@ -101,6 +102,7 @@ class CotendoDNS(CotendoObject):
             'cname': [],
             'mx': [],
             'ptr': [],
+            'srv': [],
             'txt': []
         }
         for record in self._entries:
